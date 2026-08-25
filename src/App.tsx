@@ -30,6 +30,7 @@ import {
   mockScaleOrFailoverDb,
 } from './services/mockIncidentEngine';
 import { voiceService } from './services/speechSynthesis';
+import { groqService } from './services/groqService';
 import { HeaderNavbar } from './components/HeaderNavbar';
 import { ConversationPanel } from './components/ConversationPanel';
 import { IncidentOverviewPanel } from './components/IncidentOverviewPanel';
@@ -472,10 +473,19 @@ export default function App() {
     } else if (lower.includes('approve') || lower.includes('proceed') || lower.includes('execute') || lower.includes('yes')) {
       await handleUserApproveRollback();
     } else {
+      let dynamicReply: string | null = null;
+      if (groqService.hasApiKey()) {
+        dynamicReply = await groqService.queryGroq(text, {
+          scenarioName: activeScenario.name,
+          metrics: metrics,
+          culpritCommit: activeScenario.commits[0]?.hash,
+        });
+      }
+
       await addTranscriptTurn(
         'SRE-Zero',
         'agent',
-        `Understood. Analyzing "${text}" against connected SRE telemetry tools for ${activeScenario.name}.`
+        dynamicReply || `Understood. Analyzing "${text}" against connected SRE telemetry tools for ${activeScenario.name}.`
       );
     }
   };
