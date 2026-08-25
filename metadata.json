@@ -1,0 +1,10 @@
+{
+  "name": "Remix SRE-Zero",
+  "description": "Voice-native Autonomous SRE Command Center powered by Agora AI Voice Assistant, featuring sub-100ms real-time RTC audio streams, barge-in interruptions, CRT telemetry screens, and human approval gates.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
